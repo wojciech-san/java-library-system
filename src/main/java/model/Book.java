@@ -96,6 +96,7 @@ public class Book {
     public void setDepartment(Department department) {
         this.department = department;
     }
+
     @Override
     public String toString(){
         return title +" - "+authors;

@@ -35,4 +35,28 @@ public class LibraryService {
     public void addReader(Reader reader){
         data.getReaders().add(reader);
     }
+    public void deleteBook(Book book){
+        if (!isBookAvailable(book)) {
+            throw new IllegalStateException("Nie mozna usunac wypozyczonej ksiazki");
+        }
+        data.getBooks().remove(book);
+    }
+    public void deleteShelf(Shelf shelf){
+        boolean hasBooksAssigned = data.getBooks().stream().anyMatch(book -> book.getShelf().equals(shelf));
+
+        if (hasBooksAssigned) {
+            throw new IllegalStateException("Nie mozna usunac polki z przypisanymi ksiazkami");
+        }
+        data.getShelves().remove(shelf);
+    }
+
+    public boolean isBookAvailable(Book book) {
+        return data.getLoans()
+                .stream()
+                .noneMatch(loan ->
+                        loan.getBook().equals(book)
+                                && loan.getReturnDate() == null
+                );
+    }
+
 }
