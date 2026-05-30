@@ -24,7 +24,7 @@ public class Loan {
     private LocalDate dueDate;
 
     // faktyczna data zwrotu ksiazki (NULL oznacza ze ksiazka nie zostala jeszcze zwrocona)
-    private  LocalDate returnDate;
+    private LocalDate returnDate;
 
     public Loan(Long id, Book book, Reader reader, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate) {
         this.id = id;
@@ -59,18 +59,21 @@ public class Loan {
         return returnDate;
     }
 
-    public void returnBook(LocalDate returnDate){
-        this.returnDate=returnDate;
+    public void returnBook(LocalDate returnDate) {
+        this.returnDate = returnDate;
     }
-    public boolean isReturned(){
+
+    public boolean isReturned() {
         return returnDate != null;
     }
-    public boolean isOverdue(){
+
+    public boolean isOverdue() {
         return returnDate == null && dueDate.isBefore(LocalDate.now());
     }
+
     @Override
-    public String toString(){
-        return book +"->"+ reader;
+    public String toString() {
+        return book + "->" + reader;
     }
 
 }

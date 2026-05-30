@@ -19,7 +19,7 @@ public class LibraryServiceTest {
     private Reader reader;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         data = new LibraryData();
         service = new LibraryService(data);
 
@@ -55,68 +55,70 @@ public class LibraryServiceTest {
                 "12321"
         );
     }
+
     @Test
-    void shouldAddBook(){
+    void shouldAddBook() {
         service.addBook(book);
 
-        assertEquals(1,data.getBooks().size());
-        assertEquals("Java. Podstawy",data.getBooks().get(0).getTitle());
+        assertEquals(1, data.getBooks().size());
+        assertEquals("Java. Podstawy", data.getBooks().get(0).getTitle());
     }
+
     @Test
-    void shouldAddDepartment(){
+    void shouldAddDepartment() {
         service.addDepartment(department);
 
-        assertEquals(1,data.getDepartments().size());
-        assertEquals("IT",data.getDepartments().get(0).getCode());
+        assertEquals(1, data.getDepartments().size());
+        assertEquals("IT", data.getDepartments().get(0).getCode());
     }
 
     @Test
-    void shoudlAddShelf(){
+    void shoudlAddShelf() {
         service.addShelf(shelf);
 
-        assertEquals(1,data.getShelves().size());
-        assertEquals("A",data.getShelves().get(0).getRack());
+        assertEquals(1, data.getShelves().size());
+        assertEquals("A", data.getShelves().get(0).getRack());
     }
 
     @Test
-    void shoudlAddReader(){
+    void shoudlAddReader() {
         service.addReader(reader);
 
-        assertEquals(1,data.getReaders().size());
-        assertEquals("Anna",data.getReaders().get(0).getFirstName());
+        assertEquals(1, data.getReaders().size());
+        assertEquals("Anna", data.getReaders().get(0).getFirstName());
     }
 
     @Test
-    void shouldBorrowAvailableBook(){
+    void shouldBorrowAvailableBook() {
         service.addBook(book);
         service.addReader(reader);
 
-        Loan loan = service.borrowBook(book,reader,LocalDate.now().plusDays(14));
+        Loan loan = service.borrowBook(book, reader, LocalDate.now().plusDays(14));
 
         assertNotNull(loan);
-        assertEquals(1,data.getLoans().size());
+        assertEquals(1, data.getLoans().size());
         assertFalse(service.isBookAvailable(book));
     }
 
     @Test
-    void shouldNotBorrowAlreadyBorrowedBook(){
+    void shouldNotBorrowAlreadyBorrowedBook() {
         service.addBook(book);
         service.addReader(reader);
 
-        service.borrowBook(book,reader,LocalDate.now().plusDays(14));
+        service.borrowBook(book, reader, LocalDate.now().plusDays(14));
 
         assertThrows(
                 IllegalStateException.class,
-                ()->service.borrowBook(book,reader,LocalDate.now().plusDays(14))
+                () -> service.borrowBook(book, reader, LocalDate.now().plusDays(14))
         );
     }
 
     @Test
-    void shouldReturnBorrowedBook(){
+    void shouldReturnBorrowedBook() {
         service.addBook(book);
         service.addReader(reader);
 
-        Loan loan = service.borrowBook(book,reader,LocalDate.now().plusDays(14));
+        Loan loan = service.borrowBook(book, reader, LocalDate.now().plusDays(14));
 
         service.returnBook(loan);
 
@@ -125,7 +127,7 @@ public class LibraryServiceTest {
     }
 
     @Test
-    void shouldNotReturnAlreadyReturnedBook(){
+    void shouldNotReturnAlreadyReturnedBook() {
         service.addBook(book);
         service.addReader(reader);
 
@@ -138,14 +140,16 @@ public class LibraryServiceTest {
         );
 
     }
+
     @Test
-    void shouldSearchBooksByTitle(){
+    void shouldSearchBooksByTitle() {
         service.addBook(book);
         List<Book> results = service.searchBooks("java");
 
-        assertEquals(1,results.size());
-        assertEquals(book,results.get(0));
+        assertEquals(1, results.size());
+        assertEquals(book, results.get(0));
     }
+
     @Test
     void shouldFindOverdueLoans() {
         service.addBook(book);
@@ -157,6 +161,7 @@ public class LibraryServiceTest {
 
         assertEquals(1, overdueLoans.size());
     }
+
     @Test
     void shouldDeleteShelfWhenNoBooksAssigned() {
         service.addShelf(shelf);

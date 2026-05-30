@@ -10,11 +10,11 @@ public class LibraryData {
     // lista ksiazek
     private List<Book> books = new ArrayList<>();
     // lista dzialow literackich
-    private  List<Department> departments = new ArrayList<>();
+    private List<Department> departments = new ArrayList<>();
     // lista regalow i pulek
-    private  List<Shelf> shelves = new ArrayList<>();
+    private List<Shelf> shelves = new ArrayList<>();
     // lista wypozyczjacych
-    private  List<Reader>readers = new ArrayList<>();
+    private List<Reader> readers = new ArrayList<>();
     // lista wypozyczen
     private List<Loan> loans = new ArrayList<>();
 

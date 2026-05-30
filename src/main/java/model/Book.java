@@ -7,7 +7,7 @@ public class Book {
     // unikalny identyfikator ksiazki
     private Long id;
     // tytul ksiazki
-    private  String title;
+    private String title;
     //autor lub autorzy ksiazki
     private String authors;
     //wydawnictwp
@@ -21,8 +21,7 @@ public class Book {
     // dzial literatury do ktorego przypisana jest ksiazka
     private Department department;
 
-    public Book(Long id, String title, String authors, String publisher, int year,
-                String isbn, Shelf shelf, Department department){
+    public Book(Long id, String title, String authors, String publisher, int year, String isbn, Shelf shelf, Department department) {
         this.id = id;
         this.title = title;
         this.authors = authors;
@@ -98,7 +97,7 @@ public class Book {
     }
 
     @Override
-    public String toString(){
-        return title +" - "+authors;
+    public String toString() {
+        return title + " - " + authors;
     }
 }

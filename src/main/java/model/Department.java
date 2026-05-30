@@ -13,11 +13,11 @@ public class Department {
     // opis dzialu
     private String description;
 
-    public Department(Long id, String code, String name, String description){
-        this.id=id;
-        this.code=code;
-        this.name=name;
-        this.description=description;
+    public Department(Long id, String code, String name, String description) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.description = description;
     }
 
     public Long getId() {
@@ -51,8 +51,9 @@ public class Department {
     public void setDescription(String description) {
         this.description = description;
     }
+
     @Override
-    public String toString(){
-        return code +" - "+name;
+    public String toString() {
+        return code + " - " + name;
     }
 }

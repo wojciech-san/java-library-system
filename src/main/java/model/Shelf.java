@@ -11,10 +11,10 @@ public class Shelf {
     // numer polki
     private String shelf;
 
-    public Shelf(Long id,String rack, String shelf){
-            this.id=id;
-            this.rack=rack;
-            this.shelf=shelf;
+    public Shelf(Long id, String rack, String shelf) {
+        this.id = id;
+        this.rack = rack;
+        this.shelf = shelf;
     }
 
     public Long getId() {
@@ -40,9 +40,10 @@ public class Shelf {
     public void setShelf(String shelf) {
         this.shelf = shelf;
     }
+
     @Override
-    public String toString(){
-        return "Regal: "+rack+", polka "+shelf;
+    public String toString() {
+        return "Regal: " + rack + ", polka " + shelf;
     }
 
 }

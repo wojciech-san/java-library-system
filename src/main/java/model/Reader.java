@@ -15,7 +15,7 @@ public class Reader {
     // nr legitymacji
     private String cardNumber;
 
-    public Reader(Long id, String firstName, String lastName, String address, String cardNumber){
+    public Reader(Long id, String firstName, String lastName, String address, String cardNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -62,8 +62,9 @@ public class Reader {
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
+
     @Override
-    public String toString(){
-        return firstName+" "+lastName+" ("+cardNumber+" )";
+    public String toString() {
+        return firstName + " " + lastName + " (" + cardNumber + " )";
     }
 }

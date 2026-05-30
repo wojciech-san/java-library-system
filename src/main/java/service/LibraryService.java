@@ -15,37 +15,42 @@ public class LibraryService {
 
     // serwis dla przetwarzania danych biblioteki
     // @param data kontener danych aplikacji
-    public LibraryService(LibraryData data){
+    public LibraryService(LibraryData data) {
         this.data = data;
     }
 
     public LibraryData getData() {
         return data;
     }
+
     // metoda dodawanie ksiazki
-    public void addBook(Book book){
+    public void addBook(Book book) {
         data.getBooks().add(book);
     }
 
     // metoda dodawanie departamentu
-    public void addDepartment(Department department){
+    public void addDepartment(Department department) {
         data.getDepartments().add(department);
     }
+
     // metoda dodawanie polki
-    public void addShelf(Shelf shelf){
+    public void addShelf(Shelf shelf) {
         data.getShelves().add(shelf);
     }
+
     // metoda dodawanie czytelnika
-    public void addReader(Reader reader){
+    public void addReader(Reader reader) {
         data.getReaders().add(reader);
     }
-    public void deleteBook(Book book){
+
+    public void deleteBook(Book book) {
         if (!isBookAvailable(book)) {
             throw new IllegalStateException("Nie mozna usunac wypozyczonej ksiazki");
         }
         data.getBooks().remove(book);
     }
-    public void deleteShelf(Shelf shelf){
+
+    public void deleteShelf(Shelf shelf) {
         boolean hasBooksAssigned = data.getBooks().stream().anyMatch(book -> book.getShelf().equals(shelf));
 
         if (hasBooksAssigned) {
@@ -62,6 +67,7 @@ public class LibraryService {
                                 && loan.getReturnDate() == null
                 );
     }
+
     public Loan borrowBook(Book book, Reader reader, LocalDate dueDate) {
         if (!isBookAvailable(book)) {
             throw new IllegalStateException("Ksiazka jest juz wypozyczona.");
@@ -72,7 +78,7 @@ public class LibraryService {
                 book,
                 reader,
                 LocalDate.now(),
-                dueDate,null
+                dueDate, null
         );
 
         data.getLoans().add(loan);
@@ -80,7 +86,7 @@ public class LibraryService {
         return loan;
     }
 
-    public void returnBook(Loan loan){
+    public void returnBook(Loan loan) {
         if (loan.getReturnDate() != null) {
             throw new IllegalStateException("Ksiazka zostala zwrocona.");
         }
@@ -93,6 +99,7 @@ public class LibraryService {
                 .filter(Loan::isOverdue)
                 .collect(Collectors.toList());
     }
+
     public List<Book> searchBooks(String phrase) {
         String lowerPhrase = phrase.toLowerCase();
 
