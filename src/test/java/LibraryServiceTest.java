@@ -73,7 +73,7 @@ public class LibraryServiceTest {
     }
 
     @Test
-    void shoudlAddShelf() {
+    void shouldAddShelf() {
         service.addShelf(shelf);
 
         assertEquals(1, data.getShelves().size());
@@ -81,7 +81,7 @@ public class LibraryServiceTest {
     }
 
     @Test
-    void shoudlAddReader() {
+    void shouldAddReader() {
         service.addReader(reader);
 
         assertEquals(1, data.getReaders().size());
@@ -203,7 +203,7 @@ public class LibraryServiceTest {
                 () -> service.deleteBook(book)
         );
     }
-    
+
     @Test
     void shouldUpdateBook() {
         service.addBook(book);
