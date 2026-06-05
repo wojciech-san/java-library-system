@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Klasa odpowiadajaca za logike biznesowa systemu bibliotycznego.
+ * Klasa odpowiadajaca za logike biznesowa systemu bibliotecznego.
  */
 public class LibraryService {
-    //obiekt zwierajacy dane aplikacji
+    //obiekt zawierajacy dane aplikacji
     private final LibraryData data;
 
     public LibraryService(LibraryData data) {
         if (data == null) {
-            throw new IllegalArgumentException("Dane biblioteki nie moga byc puste");
+            throw new IllegalArgumentException("Dane biblioteki nie moga byc null");
         }
         this.data = data;
     }
@@ -224,7 +224,7 @@ public class LibraryService {
     }
 
     /**
-     * Zwraca liste aktywnych (niewroconych) wypozyczen.
+     * Zwraca liste aktywnych (niezwroconych) wypozyczen.
      */
     public List<Loan> findActiveLoans() {
         return data.getLoans()
@@ -304,7 +304,7 @@ public class LibraryService {
 
     private void validateNotNull(Object value, String name) {
         if (value == null) {
-            throw new IllegalArgumentException(name + " nie moze byc puste");
+            throw new IllegalArgumentException(name + " nie moze byc null");
         }
     }
 
