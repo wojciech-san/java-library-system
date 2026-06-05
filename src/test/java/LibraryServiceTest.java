@@ -73,7 +73,7 @@ public class LibraryServiceTest {
     }
 
     @Test
-    void shoudlAddShelf() {
+    void shouldAddShelf() {
         service.addShelf(shelf);
 
         assertEquals(1, data.getShelves().size());
@@ -81,7 +81,7 @@ public class LibraryServiceTest {
     }
 
     @Test
-    void shoudlAddReader() {
+    void shouldAddReader() {
         service.addReader(reader);
 
         assertEquals(1, data.getReaders().size());
@@ -202,6 +202,173 @@ public class LibraryServiceTest {
                 IllegalStateException.class,
                 () -> service.deleteBook(book)
         );
+    }
+
+    @Test
+    void shouldUpdateBook() {
+        service.addBook(book);
+
+        Book updated = new Book(
+                1L,
+                "Java. Zaawansowane",
+                "Jan Kowalski, Adam Nowak",
+                "WIT Press",
+                2025,
+                "978-83-0000-000-1",
+                shelf,
+                department
+        );
+
+        service.updateBook(updated);
+
+        Book stored = data.getBooks().get(0);
+        assertEquals("Java. Zaawansowane", stored.getTitle());
+        assertEquals(2025, stored.getYear());
+        assertEquals("978-83-0000-000-1", stored.getIsbn());
+    }
+
+    @Test
+    void shouldNotUpdateNonExistingBook() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.updateBook(book)
+        );
+    }
+
+    @Test
+    void shouldUpdateDepartment() {
+        service.addDepartment(department);
+
+        Department updated = new Department(1L, "CS", "Computer Science", "Programming books");
+        service.updateDepartment(updated);
+
+        Department stored = data.getDepartments().get(0);
+        assertEquals("CS", stored.getCode());
+        assertEquals("Computer Science", stored.getName());
+    }
+
+    @Test
+    void shouldUpdateShelf() {
+        service.addShelf(shelf);
+
+        Shelf updated = new Shelf(1L, "B", "2");
+        service.updateShelf(updated);
+
+        Shelf stored = data.getShelves().get(0);
+        assertEquals("B", stored.getRack());
+        assertEquals("2", stored.getShelf());
+    }
+
+    @Test
+    void shouldUpdateReader() {
+        service.addReader(reader);
+
+        Reader updated = new Reader(1L, "Maria", "Kowalska", "Krakow", "99999");
+        service.updateReader(updated);
+
+        Reader stored = data.getReaders().get(0);
+        assertEquals("Maria", stored.getFirstName());
+        assertEquals("Krakow", stored.getAddress());
+    }
+
+    @Test
+    void shouldDeleteDepartmentWhenNoBooksAssigned() {
+        service.addDepartment(department);
+
+        service.deleteDepartment(department);
+
+        assertEquals(0, data.getDepartments().size());
+    }
+
+    @Test
+    void shouldNotDeleteDepartmentWhenBooksAssigned() {
+        service.addDepartment(department);
+        service.addBook(book);
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> service.deleteDepartment(department)
+        );
+    }
+
+    @Test
+    void shouldDeleteReaderWhenNoActiveLoans() {
+        service.addReader(reader);
+
+        service.deleteReader(reader);
+
+        assertEquals(0, data.getReaders().size());
+    }
+
+    @Test
+    void shouldNotDeleteReaderWithActiveLoan() {
+        service.addBook(book);
+        service.addReader(reader);
+
+        service.borrowBook(book, reader, LocalDate.now().plusDays(14));
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> service.deleteReader(reader)
+        );
+    }
+
+    @Test
+    void shouldDeleteReaderAfterBookReturned() {
+        service.addBook(book);
+        service.addReader(reader);
+
+        Loan loan = service.borrowBook(book, reader, LocalDate.now().plusDays(14));
+        service.returnBook(loan);
+
+        service.deleteReader(reader);
+
+        assertEquals(0, data.getReaders().size());
+    }
+
+    @Test
+    void shouldFindActiveLoans() {
+        service.addBook(book);
+        service.addReader(reader);
+
+        service.borrowBook(book, reader, LocalDate.now().plusDays(14));
+
+        List<Loan> activeLoans = service.findActiveLoans();
+
+        assertEquals(1, activeLoans.size());
+        assertNull(activeLoans.get(0).getReturnDate());
+    }
+
+    @Test
+    void shouldNotIncludeReturnedLoansInActiveLoans() {
+        service.addBook(book);
+        service.addReader(reader);
+
+        Loan loan = service.borrowBook(book, reader, LocalDate.now().plusDays(14));
+        service.returnBook(loan);
+
+        assertEquals(0, service.findActiveLoans().size());
+    }
+
+    @Test
+    void shouldFindLoansByReader() {
+        service.addBook(book);
+        service.addReader(reader);
+
+        service.borrowBook(book, reader, LocalDate.now().plusDays(14));
+
+        List<Loan> readerLoans = service.findLoansByReader(reader);
+
+        assertEquals(1, readerLoans.size());
+        assertEquals(reader, readerLoans.get(0).getReader());
+    }
+
+    @Test
+    void shouldReturnEmptyListForBlankSearchPhrase() {
+        service.addBook(book);
+
+        assertTrue(service.searchBooks("").isEmpty());
+        assertTrue(service.searchBooks("   ").isEmpty());
     }
 
 }
