@@ -10,6 +10,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BooksPanel extends JPanel {
+    private final JComboBox<Department> departmentComboBox;
+    private final JComboBox<Shelf> shelfComboBox;
+
     private final LibraryService libraryService;
 
     private final BookTableModel bookTableModel;
@@ -23,6 +26,9 @@ public class BooksPanel extends JPanel {
 
     private final JButton addButton;
     private final JButton deleteButton;
+
+    private final JButton refreshListsButton;
+
 
     public BooksPanel(LibraryService libraryService) {
         this.libraryService = libraryService;
@@ -39,11 +45,17 @@ public class BooksPanel extends JPanel {
         this.addButton = new JButton("Dodaj");
         this.deleteButton = new JButton("Usuń");
 
+        this.departmentComboBox = new JComboBox<>();
+        this.shelfComboBox = new JComboBox<>();
+
+        this.refreshListsButton = new JButton("Odśwież listy");
+
         setLayout(new BorderLayout());
 
         add(createTablePanel(), BorderLayout.CENTER);
         add(createFormPanel(), BorderLayout.SOUTH);
 
+        refreshComboBoxes();
         addListeners();
     }
     private JPanel createTablePanel() {
@@ -55,7 +67,7 @@ public class BooksPanel extends JPanel {
     private JPanel createFormPanel() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        JPanel fieldsPanel = new JPanel(new GridLayout(5, 2, 5, 5));
+        JPanel fieldsPanel = new JPanel(new GridLayout(7, 2, 5, 5));
 
         fieldsPanel.add(new JLabel("Tytuł:"));
         fieldsPanel.add(titleField);
@@ -72,7 +84,14 @@ public class BooksPanel extends JPanel {
         fieldsPanel.add(new JLabel("ISBN:"));
         fieldsPanel.add(isbnField);
 
+        fieldsPanel.add(new JLabel("Dział:"));
+        fieldsPanel.add(departmentComboBox);
+
+        fieldsPanel.add(new JLabel("Miejsce przechowywania:"));
+        fieldsPanel.add(shelfComboBox);
+
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(refreshListsButton);
         buttonsPanel.add(addButton);
         buttonsPanel.add(deleteButton);
 
@@ -85,6 +104,7 @@ public class BooksPanel extends JPanel {
     private void addListeners() {
         addButton.addActionListener(event -> addBook());
         deleteButton.addActionListener(event -> deleteSelectedBook());
+        refreshListsButton.addActionListener(event -> refreshComboBoxes());
     }
     private void addBook() {
         try {
@@ -101,13 +121,13 @@ public class BooksPanel extends JPanel {
                 return;
             }
 
-            /*
-             * Na razie department i shelf są ustawione jako null,
-             * bo panele działów i półek mogą jeszcze nie być gotowe.
-             * Później dodamy JComboBox<Department> i JComboBox<Shelf>.
-             */
-            Department department = null;
-            Shelf shelf = null;
+            Department department = (Department) departmentComboBox.getSelectedItem();
+            Shelf shelf = (Shelf) shelfComboBox.getSelectedItem();
+
+            if (department == null || shelf == null) {
+                JOptionPane.showMessageDialog(this, "Najpierw dodaj dział oraz regał/półkę.");
+                return;
+            }
 
             Book book = new Book(
                     id,
@@ -161,6 +181,17 @@ public class BooksPanel extends JPanel {
         publisherField.setText("");
         yearField.setText("");
         isbnField.setText("");
+    }
+    private void refreshComboBoxes() {
+        departmentComboBox.removeAllItems();
+        for (Department department : libraryService.getData().getDepartments()) {
+            departmentComboBox.addItem(department);
+        }
+
+        shelfComboBox.removeAllItems();
+        for (Shelf shelf : libraryService.getData().getShelves()) {
+            shelfComboBox.addItem(shelf);
+        }
     }
 
 }
