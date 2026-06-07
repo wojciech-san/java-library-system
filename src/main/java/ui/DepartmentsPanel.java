@@ -119,15 +119,7 @@ public class DepartmentsPanel extends JPanel {
         Department selectedDepartment = departmentTableModel.getDepartmentAt(selectedRow);
 
         try {
-            /*
-             * Jeśli LibraryService nie ma jeszcze deleteDepartment(),
-             * tymczasowo można usuwać bezpośrednio z listy.
-             *
-             * Docelowo lepiej mieć:
-             * libraryService.deleteDepartment(selectedDepartment);
-             */
-            libraryService.getData().getDepartments().remove(selectedDepartment);
-
+            libraryService.deleteDepartment(selectedDepartment);
             refreshTable();
 
             JOptionPane.showMessageDialog(this, "Usunięto dział literatury.");
