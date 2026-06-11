@@ -154,5 +154,8 @@ public class LoansPanel extends JPanel {
         dueDateField.setText("");
     }
 
-
+    public void refreshView() {
+        refreshComboBoxes();
+        refreshTable();
+    }
 }

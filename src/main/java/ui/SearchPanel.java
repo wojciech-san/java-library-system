@@ -169,4 +169,7 @@ public class SearchPanel extends JPanel {
         resultsTableModel.setRowCount(0);
         resultsTableModel.setColumnCount(0);
     }
+    public void refreshView() {
+        clearResults();
+    }
 }

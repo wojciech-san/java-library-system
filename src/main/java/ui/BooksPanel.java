@@ -193,5 +193,9 @@ public class BooksPanel extends JPanel {
             shelfComboBox.addItem(shelf);
         }
     }
+    public void refreshView() {
+        refreshComboBoxes();
+        refreshTable();
+    }
 
 }

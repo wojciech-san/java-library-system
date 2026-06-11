@@ -122,4 +122,8 @@ public class ShelvesPanel extends JPanel {
         shelfField.setText("");
     }
 
+    public void refreshView() {
+        refreshTable();
+    }
+
 }

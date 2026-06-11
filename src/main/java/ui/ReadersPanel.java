@@ -147,5 +147,8 @@ public class ReadersPanel extends JPanel {
         addressField.setText("");
         cardNumberField.setText("");
     }
+    public void refreshView() {
+        refreshTable();
+    }
 
 }

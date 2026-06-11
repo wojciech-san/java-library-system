@@ -138,4 +138,8 @@ public class DepartmentsPanel extends JPanel {
         descriptionArea.setText("");
     }
 
+    public void refreshView() {
+        refreshTable();
+    }
+
 }
