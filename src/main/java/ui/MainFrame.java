@@ -87,14 +87,24 @@ public class MainFrame extends JFrame {
 
         File file = fileChooser.getSelectedFile();
 
-        try {
-            fileStorageService.save(libraryService.getData(), file);
-            JOptionPane.showMessageDialog(this, "Zapisano dane do pliku.");
-        } catch (Exception exception) {
-            JOptionPane.showMessageDialog(this, "Błąd zapisu: " + exception.getMessage());
-        }
-    }
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                fileStorageService.save(libraryService.getData(), file);
+                return null;
+            }
 
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    JOptionPane.showMessageDialog(MainFrame.this, "Zapisano dane do pliku.");
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(MainFrame.this, "Błąd zapisu: " + exception.getMessage());
+                }
+            }
+        }.execute();
+    }
     private void replaceCurrentData(LibraryData loadedData) {
         LibraryData currentData = libraryService.getData();
 
