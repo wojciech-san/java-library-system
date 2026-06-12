@@ -1,3 +1,4 @@
+import i18n.LanguageManager;
 import model.Book;
 import model.Department;
 import model.LibraryData;
@@ -12,8 +13,9 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             LibraryData data = new LibraryData();
             LibraryService service = new LibraryService(data);
+            LanguageManager languageManager = new LanguageManager();
 
-            MainFrame frame = new MainFrame(service);
+            MainFrame frame = new MainFrame(service,languageManager);
             frame.setVisible(true);
         });
     }

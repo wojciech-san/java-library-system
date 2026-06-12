@@ -1,20 +1,23 @@
 package ui;
 
+import i18n.LanguageManager;
 import model.Book;
 import model.Loan;
 import service.LibraryService;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
 /**
- * Panel for searching books and loans.
+ * Panel responsible for searching books and displaying loan reports.
  */
 public class SearchPanel extends JPanel {
 
     private final LibraryService libraryService;
+    private final LanguageManager languageManager;
 
     private final JTextField searchField;
 
@@ -26,18 +29,26 @@ public class SearchPanel extends JPanel {
     private final JTable resultsTable;
     private final DefaultTableModel resultsTableModel;
 
-    public SearchPanel(LibraryService libraryService) {
+    private final JLabel phraseLabel;
+
+    private TitledBorder searchBorder;
+    private TitledBorder resultsBorder;
+
+    public SearchPanel(LibraryService libraryService, LanguageManager languageManager) {
         this.libraryService = libraryService;
+        this.languageManager = languageManager;
 
         this.searchField = new JTextField();
 
-        this.searchBooksButton = new JButton("Szukaj książek");
-        this.activeLoansButton = new JButton("Aktywne wypożyczenia");
-        this.overdueLoansButton = new JButton("Przeterminowane");
-        this.clearButton = new JButton("Wyczyść");
+        this.searchBooksButton = new JButton();
+        this.activeLoansButton = new JButton();
+        this.overdueLoansButton = new JButton();
+        this.clearButton = new JButton();
 
         this.resultsTableModel = new DefaultTableModel();
         this.resultsTable = new JTable(resultsTableModel);
+
+        this.phraseLabel = new JLabel();
 
         setLayout(new BorderLayout());
 
@@ -45,13 +56,14 @@ public class SearchPanel extends JPanel {
         add(createResultsPanel(), BorderLayout.CENTER);
 
         addListeners();
+        reloadTexts();
     }
 
     private JPanel createSearchPanel() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel inputPanel = new JPanel(new BorderLayout(5, 5));
-        inputPanel.add(new JLabel("Fraza:"), BorderLayout.WEST);
+        inputPanel.add(phraseLabel, BorderLayout.WEST);
         inputPanel.add(searchField, BorderLayout.CENTER);
 
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -60,7 +72,9 @@ public class SearchPanel extends JPanel {
         buttonsPanel.add(overdueLoansButton);
         buttonsPanel.add(clearButton);
 
-        mainPanel.setBorder(BorderFactory.createTitledBorder("Wyszukiwanie"));
+        searchBorder = BorderFactory.createTitledBorder("");
+        mainPanel.setBorder(searchBorder);
+
         mainPanel.add(inputPanel, BorderLayout.CENTER);
         mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
@@ -69,8 +83,12 @@ public class SearchPanel extends JPanel {
 
     private JPanel createResultsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("Wyniki"));
+
+        resultsBorder = BorderFactory.createTitledBorder("");
+        panel.setBorder(resultsBorder);
+
         panel.add(new JScrollPane(resultsTable), BorderLayout.CENTER);
+
         return panel;
     }
 
@@ -85,7 +103,7 @@ public class SearchPanel extends JPanel {
         String phrase = searchField.getText().trim();
 
         if (phrase.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Wpisz frazę do wyszukania.");
+            JOptionPane.showMessageDialog(this, languageManager.get("message.enterSearchPhrase"));
             return;
         }
 
@@ -96,14 +114,14 @@ public class SearchPanel extends JPanel {
 
     private void showBooksResult(List<Book> books) {
         resultsTableModel.setColumnIdentifiers(new String[]{
-                "ID",
-                "Tytuł",
-                "Autorzy",
-                "Wydawnictwo",
-                "Rok",
-                "ISBN",
-                "Dział",
-                "Miejsce"
+                languageManager.get("table.id"),
+                languageManager.get("table.title"),
+                languageManager.get("table.authors"),
+                languageManager.get("table.publisher"),
+                languageManager.get("table.year"),
+                languageManager.get("table.isbn"),
+                languageManager.get("table.department"),
+                languageManager.get("table.storage")
         });
 
         resultsTableModel.setRowCount(0);
@@ -140,13 +158,13 @@ public class SearchPanel extends JPanel {
 
     private void showLoansResult(List<Loan> loans) {
         resultsTableModel.setColumnIdentifiers(new String[]{
-                "ID",
-                "Książka",
-                "Czytelnik",
-                "Data wypożyczenia",
-                "Termin zwrotu",
-                "Data zwrotu",
-                "Status"
+                languageManager.get("table.id"),
+                languageManager.get("table.book"),
+                languageManager.get("table.reader"),
+                languageManager.get("table.loanDate"),
+                languageManager.get("table.dueDate"),
+                languageManager.get("table.returnDate"),
+                languageManager.get("table.status")
         });
 
         resultsTableModel.setRowCount(0);
@@ -159,7 +177,9 @@ public class SearchPanel extends JPanel {
                     loan.getLoanDate(),
                     loan.getDueDate(),
                     loan.getReturnDate() != null ? loan.getReturnDate() : "",
-                    loan.getReturnDate() == null ? "Aktywne" : "Zwrócone"
+                    loan.getReturnDate() == null
+                            ? languageManager.get("status.active")
+                            : languageManager.get("status.returned")
             });
         }
     }
@@ -169,7 +189,23 @@ public class SearchPanel extends JPanel {
         resultsTableModel.setRowCount(0);
         resultsTableModel.setColumnCount(0);
     }
+
     public void refreshView() {
         clearResults();
+    }
+
+    public void reloadTexts() {
+        phraseLabel.setText(languageManager.get("label.phrase"));
+
+        searchBooksButton.setText(languageManager.get("button.searchBooks"));
+        activeLoansButton.setText(languageManager.get("button.activeLoans"));
+        overdueLoansButton.setText(languageManager.get("button.overdueLoans"));
+        clearButton.setText(languageManager.get("button.clear"));
+
+        searchBorder.setTitle(languageManager.get("border.search"));
+        resultsBorder.setTitle(languageManager.get("border.results"));
+
+        revalidate();
+        repaint();
     }
 }

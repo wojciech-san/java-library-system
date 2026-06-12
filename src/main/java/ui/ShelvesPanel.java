@@ -1,14 +1,21 @@
 package ui;
 
+import i18n.LanguageManager;
 import model.Shelf;
 import service.LibraryService;
 import ui.tablemodel.ShelfTableModel;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
+/**
+ * Panel responsible for displaying, adding and deleting shelves and racks.
+ */
 public class ShelvesPanel extends JPanel {
+
     private final LibraryService libraryService;
+    private final LanguageManager languageManager;
 
     private final ShelfTableModel shelfTableModel;
     private final JTable shelvesTable;
@@ -19,105 +26,136 @@ public class ShelvesPanel extends JPanel {
     private final JButton addButton;
     private final JButton deleteButton;
 
-    public ShelvesPanel(LibraryService libraryService) {
+    private final JLabel rackLabel;
+    private final JLabel shelfLabel;
+
+    private TitledBorder formBorder;
+
+    public ShelvesPanel(LibraryService libraryService, LanguageManager languageManager) {
         this.libraryService = libraryService;
+        this.languageManager = languageManager;
 
         this.shelfTableModel = new ShelfTableModel(
                 libraryService.getData().getShelves()
         );
         this.shelvesTable = new JTable(shelfTableModel);
+
         this.rackField = new JTextField();
         this.shelfField = new JTextField();
 
-        this.addButton = new JButton("Dodaj");
-        this.deleteButton = new JButton("Usuń");
+        this.addButton = new JButton();
+        this.deleteButton = new JButton();
+
+        this.rackLabel = new JLabel();
+        this.shelfLabel = new JLabel();
 
         setLayout(new BorderLayout());
+
         add(createTablePanel(), BorderLayout.CENTER);
         add(createFormPanel(), BorderLayout.SOUTH);
 
         addListeners();
+        reloadTexts();
     }
 
-    private JPanel createTablePanel(){
+    private JPanel createTablePanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new JScrollPane(shelvesTable),BorderLayout.CENTER);
+        panel.add(new JScrollPane(shelvesTable), BorderLayout.CENTER);
         return panel;
     }
-    private JPanel createFormPanel(){
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel fieldsPanel = new JPanel(new GridLayout(2,2,5,5));
 
-        fieldsPanel.add(new JLabel("Regał:"));
+    private JPanel createFormPanel() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        JPanel fieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+
+        fieldsPanel.add(rackLabel);
         fieldsPanel.add(rackField);
 
-        fieldsPanel.add(new JLabel("Półka"));
+        fieldsPanel.add(shelfLabel);
         fieldsPanel.add(shelfField);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.add(addButton);
-        buttonPanel.add(deleteButton);
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(addButton);
+        buttonsPanel.add(deleteButton);
 
-        mainPanel.setBorder(BorderFactory.createTitledBorder("Dane regału i półki"));
+        formBorder = BorderFactory.createTitledBorder("");
+        mainPanel.setBorder(formBorder);
+
         mainPanel.add(fieldsPanel, BorderLayout.CENTER);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
         return mainPanel;
     }
 
-    public void addListeners(){
-        addButton.addActionListener(event ->addShelf());
+    private void addListeners() {
+        addButton.addActionListener(event -> addShelf());
         deleteButton.addActionListener(event -> deleteSelectedShelf());
     }
 
-    private void addShelf(){
-        try{
-            Long id  = System.currentTimeMillis();
+    private void addShelf() {
+        try {
+            Long id = System.currentTimeMillis();
 
             String rack = rackField.getText().trim();
             String shelfName = shelfField.getText().trim();
 
             if (rack.isEmpty() || shelfName.isEmpty()) {
-                JOptionPane.showMessageDialog(this,"Regał i półka są wymagane.");
+                JOptionPane.showMessageDialog(
+                        this,
+                        languageManager.get("message.rackAndShelfRequired")
+                );
                 return;
             }
-            Shelf shelf = new Shelf(
-                    id,
-                    rack,
-                    shelfName
-            );
+
+            Shelf shelf = new Shelf(id, rack, shelfName);
+
             libraryService.addShelf(shelf);
 
             refreshTable();
             clearForm();
 
-            JOptionPane.showMessageDialog(this,"Dodano regał i półkę");
-
-        } catch (Exception exception){
-            JOptionPane.showMessageDialog(this,"Błąd: "+ exception.getMessage());
+            JOptionPane.showMessageDialog(this, languageManager.get("message.shelfAdded"));
+        } catch (Exception exception) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    languageManager.get("message.error") + " " + exception.getMessage()
+            );
         }
     }
-    private void deleteSelectedShelf(){
+
+    private void deleteSelectedShelf() {
         int selectedRow = shelvesTable.getSelectedRow();
-        if (selectedRow <0) {
-            JOptionPane.showMessageDialog(this,"Wybierz regał/półkę do usunięcia");
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    languageManager.get("message.selectShelfToDelete")
+            );
             return;
         }
+
         Shelf selectedShelf = shelfTableModel.getShelfAt(selectedRow);
-        try{
+
+        try {
             libraryService.deleteShelf(selectedShelf);
+
             refreshTable();
 
-            JOptionPane.showMessageDialog(this,"Usunięto regał/półkę");
-        } catch (Exception exception){
-            JOptionPane.showMessageDialog(this,"Błąd: "+exception.getMessage());
+            JOptionPane.showMessageDialog(this, languageManager.get("message.shelfDeleted"));
+        } catch (Exception exception) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    languageManager.get("message.error") + " " + exception.getMessage()
+            );
         }
     }
 
-    private void refreshTable(){
-        shelfTableModel.refresh();
+    private void refreshTable() {
+        shelfTableModel.fireTableDataChanged();
     }
-    private void clearForm(){
+
+    private void clearForm() {
         rackField.setText("");
         shelfField.setText("");
     }
@@ -126,4 +164,16 @@ public class ShelvesPanel extends JPanel {
         refreshTable();
     }
 
+    public void reloadTexts() {
+        addButton.setText(languageManager.get("button.add"));
+        deleteButton.setText(languageManager.get("button.delete"));
+
+        rackLabel.setText(languageManager.get("label.rack"));
+        shelfLabel.setText(languageManager.get("label.shelf"));
+
+        formBorder.setTitle(languageManager.get("border.shelfData"));
+
+        revalidate();
+        repaint();
+    }
 }

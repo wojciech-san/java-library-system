@@ -1,14 +1,21 @@
 package ui;
 
+import i18n.LanguageManager;
 import model.Department;
 import service.LibraryService;
 import ui.tablemodel.DepartmentTableModel;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
+/**
+ * Panel responsible for displaying, adding and deleting literature departments.
+ */
 public class DepartmentsPanel extends JPanel {
+
     private final LibraryService libraryService;
+    private final LanguageManager languageManager;
 
     private final DepartmentTableModel departmentTableModel;
     private final JTable departmentsTable;
@@ -20,8 +27,15 @@ public class DepartmentsPanel extends JPanel {
     private final JButton addButton;
     private final JButton deleteButton;
 
-    public DepartmentsPanel(LibraryService libraryService) {
+    private final JLabel codeLabel;
+    private final JLabel nameLabel;
+    private final JLabel descriptionLabel;
+
+    private TitledBorder formBorder;
+
+    public DepartmentsPanel(LibraryService libraryService, LanguageManager languageManager) {
         this.libraryService = libraryService;
+        this.languageManager = languageManager;
 
         this.departmentTableModel = new DepartmentTableModel(
                 libraryService.getData().getDepartments()
@@ -32,8 +46,12 @@ public class DepartmentsPanel extends JPanel {
         this.nameField = new JTextField();
         this.descriptionArea = new JTextArea(3, 20);
 
-        this.addButton = new JButton("Dodaj");
-        this.deleteButton = new JButton("Usuń");
+        this.addButton = new JButton();
+        this.deleteButton = new JButton();
+
+        this.codeLabel = new JLabel();
+        this.nameLabel = new JLabel();
+        this.descriptionLabel = new JLabel();
 
         setLayout(new BorderLayout());
 
@@ -41,7 +59,9 @@ public class DepartmentsPanel extends JPanel {
         add(createFormPanel(), BorderLayout.SOUTH);
 
         addListeners();
+        reloadTexts();
     }
+
     private JPanel createTablePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JScrollPane(departmentsTable), BorderLayout.CENTER);
@@ -53,25 +73,28 @@ public class DepartmentsPanel extends JPanel {
 
         JPanel fieldsPanel = new JPanel(new GridLayout(3, 2, 5, 5));
 
-        fieldsPanel.add(new JLabel("Kod działu:"));
+        fieldsPanel.add(codeLabel);
         fieldsPanel.add(codeField);
 
-        fieldsPanel.add(new JLabel("Nazwa:"));
+        fieldsPanel.add(nameLabel);
         fieldsPanel.add(nameField);
 
-        fieldsPanel.add(new JLabel("Opis:"));
+        fieldsPanel.add(descriptionLabel);
         fieldsPanel.add(new JScrollPane(descriptionArea));
 
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonsPanel.add(addButton);
         buttonsPanel.add(deleteButton);
 
-        mainPanel.setBorder(BorderFactory.createTitledBorder("Dane działu"));
+        formBorder = BorderFactory.createTitledBorder("");
+        mainPanel.setBorder(formBorder);
+
         mainPanel.add(fieldsPanel, BorderLayout.CENTER);
         mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
         return mainPanel;
     }
+
     private void addListeners() {
         addButton.addActionListener(event -> addDepartment());
         deleteButton.addActionListener(event -> deleteSelectedDepartment());
@@ -86,25 +109,26 @@ public class DepartmentsPanel extends JPanel {
             String description = descriptionArea.getText().trim();
 
             if (code.isEmpty() || name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Kod i nazwa działu są wymagane.");
+                JOptionPane.showMessageDialog(
+                        this,
+                        languageManager.get("message.departmentCodeAndNameRequired")
+                );
                 return;
             }
 
-            Department department = new Department(
-                    id,
-                    code,
-                    name,
-                    description
-            );
+            Department department = new Department(id, code, name, description);
 
             libraryService.addDepartment(department);
 
             refreshTable();
             clearForm();
 
-            JOptionPane.showMessageDialog(this, "Dodano dział literatury.");
+            JOptionPane.showMessageDialog(this, languageManager.get("message.departmentAdded"));
         } catch (Exception exception) {
-            JOptionPane.showMessageDialog(this, "Błąd: " + exception.getMessage());
+            JOptionPane.showMessageDialog(
+                    this,
+                    languageManager.get("message.error") + " " + exception.getMessage()
+            );
         }
     }
 
@@ -112,7 +136,10 @@ public class DepartmentsPanel extends JPanel {
         int selectedRow = departmentsTable.getSelectedRow();
 
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Wybierz dział do usunięcia.");
+            JOptionPane.showMessageDialog(
+                    this,
+                    languageManager.get("message.selectDepartmentToDelete")
+            );
             return;
         }
 
@@ -120,16 +147,20 @@ public class DepartmentsPanel extends JPanel {
 
         try {
             libraryService.deleteDepartment(selectedDepartment);
+
             refreshTable();
 
-            JOptionPane.showMessageDialog(this, "Usunięto dział literatury.");
+            JOptionPane.showMessageDialog(this, languageManager.get("message.departmentDeleted"));
         } catch (Exception exception) {
-            JOptionPane.showMessageDialog(this, "Błąd: " + exception.getMessage());
+            JOptionPane.showMessageDialog(
+                    this,
+                    languageManager.get("message.error") + " " + exception.getMessage()
+            );
         }
     }
 
     private void refreshTable() {
-        departmentTableModel.refresh();
+        departmentTableModel.fireTableDataChanged();
     }
 
     private void clearForm() {
@@ -142,4 +173,17 @@ public class DepartmentsPanel extends JPanel {
         refreshTable();
     }
 
+    public void reloadTexts() {
+        addButton.setText(languageManager.get("button.add"));
+        deleteButton.setText(languageManager.get("button.delete"));
+
+        codeLabel.setText(languageManager.get("label.departmentCode"));
+        nameLabel.setText(languageManager.get("label.name"));
+        descriptionLabel.setText(languageManager.get("label.description"));
+
+        formBorder.setTitle(languageManager.get("border.departmentData"));
+
+        revalidate();
+        repaint();
+    }
 }
