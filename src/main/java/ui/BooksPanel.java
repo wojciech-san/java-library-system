@@ -261,6 +261,17 @@ public class BooksPanel extends JPanel {
 
         formBorder.setTitle(languageManager.get("border.bookData"));
 
+        bookTableModel.setColumnNames(new String[]{
+                languageManager.get("table.id"),
+                languageManager.get("table.title"),
+                languageManager.get("table.authors"),
+                languageManager.get("table.publisher"),
+                languageManager.get("table.year"),
+                languageManager.get("table.isbn"),
+                languageManager.get("table.department"),
+                languageManager.get("table.storage")
+        });
+
         revalidate();
         repaint();
     }

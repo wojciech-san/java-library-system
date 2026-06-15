@@ -221,6 +221,16 @@ public class LoansPanel extends JPanel {
 
         formBorder.setTitle(languageManager.get("border.loanData"));
 
+        loanTableModel.setColumnNames(new String[]{
+                languageManager.get("table.id"),
+                languageManager.get("table.book"),
+                languageManager.get("table.reader"),
+                languageManager.get("table.loanDate"),
+                languageManager.get("table.dueDate"),
+                languageManager.get("table.returnDate"),
+                languageManager.get("table.status")
+        });
+
         revalidate();
         repaint();
     }

@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class ReaderTableModel extends AbstractTableModel {
-    private final String[] columns = {
+    private String[] columns = {
             "ID",
             "Imię",
             "Nazwisko",
@@ -36,6 +36,11 @@ public class ReaderTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return columns[column];
+    }
+
+    public void setColumnNames(String[] columns) {
+        this.columns = columns;
+        fireTableStructureChanged();
     }
 
     @Override

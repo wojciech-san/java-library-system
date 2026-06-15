@@ -173,6 +173,12 @@ public class ShelvesPanel extends JPanel {
 
         formBorder.setTitle(languageManager.get("border.shelfData"));
 
+        shelfTableModel.setColumnNames(new String[]{
+                languageManager.get("table.id"),
+                languageManager.get("table.rack"),
+                languageManager.get("table.shelf")
+        });
+
         revalidate();
         repaint();
     }

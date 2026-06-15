@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class LoanTableModel extends AbstractTableModel {
-    private final String[] columns = {
+    private String[] columns = {
             "ID",
             "Książka",
             "Czytelnik",
@@ -38,6 +38,11 @@ public class LoanTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return columns[column];
+    }
+
+    public void setColumnNames(String[] columns) {
+        this.columns = columns;
+        fireTableStructureChanged();
     }
 
     @Override

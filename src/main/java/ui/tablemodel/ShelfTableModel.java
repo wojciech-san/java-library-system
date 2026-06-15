@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class ShelfTableModel extends AbstractTableModel {
-    private final String[] columns = {
+    private String[] columns = {
             "ID",
             "Regał",
             "Półka"
@@ -31,6 +31,12 @@ public class ShelfTableModel extends AbstractTableModel {
     public String getColumnName(int column){
         return columns[column];
     }
+
+    public void setColumnNames(String[] columns) {
+        this.columns = columns;
+        fireTableStructureChanged();
+    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex){
         Shelf shelf = shelves.get(rowIndex);

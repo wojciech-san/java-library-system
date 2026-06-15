@@ -193,6 +193,14 @@ public class ReadersPanel extends JPanel {
 
         formBorder.setTitle(languageManager.get("border.readerData"));
 
+        readerTableModel.setColumnNames(new String[]{
+                languageManager.get("table.id"),
+                languageManager.get("table.firstName"),
+                languageManager.get("table.lastName"),
+                languageManager.get("table.address"),
+                languageManager.get("table.cardNumber")
+        });
+
         revalidate();
         repaint();
     }

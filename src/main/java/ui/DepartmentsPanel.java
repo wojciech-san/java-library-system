@@ -183,6 +183,13 @@ public class DepartmentsPanel extends JPanel {
 
         formBorder.setTitle(languageManager.get("border.departmentData"));
 
+        departmentTableModel.setColumnNames(new String[]{
+                languageManager.get("table.id"),
+                languageManager.get("table.departmentCode"),
+                languageManager.get("table.name"),
+                languageManager.get("table.description")
+        });
+
         revalidate();
         repaint();
     }

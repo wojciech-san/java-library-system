@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BookTableModel extends AbstractTableModel {
 
-    private final String[] columns = {
+    private String[] columns = {
             "ID",
             "Tytuł",
             "Autorzy",
@@ -17,6 +17,10 @@ public class BookTableModel extends AbstractTableModel {
             "Dział",
             "Miejsce"
     };
+
+
+
+
     private List<Book> books;
 
     public BookTableModel(List<Book> books) {
@@ -43,6 +47,11 @@ public class BookTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return columns[column];
+    }
+
+    public void setColumnNames(String[] columns) {
+        this.columns = columns;
+        fireTableStructureChanged();
     }
 
     @Override
