@@ -3,6 +3,8 @@ package i18n;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import config.AppConfig;
+
 /**
  * Manages application language and translated messages.
  */
@@ -12,7 +14,7 @@ public class LanguageManager {
     private ResourceBundle messages;
 
     public LanguageManager(){
-        setLanguage("PL");
+        setLanguage(AppConfig.DEFAULT_LANGUAGE);
     }
     public void setLanguage(String languageCode) {
         this.locale = new Locale(languageCode);
