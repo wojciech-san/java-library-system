@@ -13,7 +13,7 @@ import java.awt.*;
 import java.time.LocalDate;
 
 /**
- * Panel responsible for displaying, creating and returning book loans.
+ * Panel odpowiedzialny za wyświetlanie, tworzenie oraz zwracanie wypożyczeń książek.
  */
 public class LoansPanel extends JPanel {
 

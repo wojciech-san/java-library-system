@@ -10,7 +10,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 /**
- * Panel responsible for displaying, adding and deleting readers.
+ * Panel odpowiedzialny za wyświetlanie, dodawanie i usuwanie czytelników.
  */
 public class ReadersPanel extends JPanel {
 

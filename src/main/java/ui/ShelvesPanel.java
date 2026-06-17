@@ -10,7 +10,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 /**
- * Panel responsible for displaying, adding and deleting shelves and racks.
+ * Panel odpowiedzialny za wyświetlanie, dodawanie i usuwanie półek oraz regałów.
  */
 public class ShelvesPanel extends JPanel {
 

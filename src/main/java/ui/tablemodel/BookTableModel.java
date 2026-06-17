@@ -18,9 +18,6 @@ public class BookTableModel extends AbstractTableModel {
             "Miejsce"
     };
 
-
-
-
     private List<Book> books;
 
     public BookTableModel(List<Book> books) {

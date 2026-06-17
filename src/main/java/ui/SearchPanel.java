@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Panel responsible for searching books and displaying loan reports.
+ * Panel odpowiedzialny za wyszukiwanie książek oraz wyświetlanie raportów wypożyczeń.
  */
 public class SearchPanel extends JPanel {
 

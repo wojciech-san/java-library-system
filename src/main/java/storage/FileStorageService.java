@@ -18,16 +18,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Service responsible for saving and loading library data from a binary file.
+ * Serwis odpowiedzialny za zapisywanie i odczytywanie danych biblioteki
+ * z pliku binarnego.
  */
 public class FileStorageService {
 
     /**
-     * Saves library data to file using DataOutputStream.
+     * Zapisuje dane biblioteki do pliku przy użyciu DataOutputStream.
      *
-     * @param data library data
-     * @param file target file
-     * @throws IOException when saving fails
+     * @param data dane biblioteki
+     * @param file plik docelowy
+     * @throws IOException gdy zapis się nie powiedzie
      */
     public void save(LibraryData data, File file) throws IOException {
         try (DataOutputStream out = new DataOutputStream(new FileOutputStream(file))) {
@@ -40,11 +41,11 @@ public class FileStorageService {
     }
 
     /**
-     * Loads library data from file using DataInputStream.
+     * Odczytuje dane biblioteki z pliku przy użyciu DataInputStream.
      *
-     * @param file source file
-     * @return loaded library data
-     * @throws IOException when loading fails
+     * @param file plik źródłowy
+     * @return wczytane dane biblioteki
+     * @throws IOException gdy odczyt się nie powiedzie
      */
     public LibraryData load(File file) throws IOException {
         LibraryData data = new LibraryData();
@@ -64,7 +65,9 @@ public class FileStorageService {
 
         return data;
     }
-
+    /**
+     * Zapisuje działy biblioteki.
+     */
     private void saveDepartments(DataOutputStream out, LibraryData data) throws IOException {
         out.writeInt(data.getDepartments().size());
 
@@ -75,7 +78,9 @@ public class FileStorageService {
             out.writeUTF(department.getDescription());
         }
     }
-
+    /**
+     * Wczytuje działy biblioteki.
+     */
     private void loadDepartments(
             DataInputStream in,
             LibraryData data,
@@ -95,7 +100,9 @@ public class FileStorageService {
             departmentsById.put(id, department);
         }
     }
-
+    /**
+     * Zapisuje regały.
+     */
     private void saveShelves(DataOutputStream out, LibraryData data) throws IOException {
         out.writeInt(data.getShelves().size());
 
@@ -105,7 +112,9 @@ public class FileStorageService {
             out.writeUTF(shelf.getShelf());
         }
     }
-
+    /**
+     * Wczytuje regały.
+     */
     private void loadShelves(
             DataInputStream in,
             LibraryData data,
@@ -124,7 +133,9 @@ public class FileStorageService {
             shelvesById.put(id, shelf);
         }
     }
-
+    /**
+     * Zapisuje czytelników.
+     */
     private void saveReaders(DataOutputStream out, LibraryData data) throws IOException {
         out.writeInt(data.getReaders().size());
 
@@ -136,7 +147,9 @@ public class FileStorageService {
             out.writeUTF(reader.getCardNumber());
         }
     }
-
+    /**
+     * Wczytuje czytelników.
+     */
     private void loadReaders(
             DataInputStream in,
             LibraryData data,
@@ -157,7 +170,9 @@ public class FileStorageService {
             readersById.put(id, reader);
         }
     }
-
+    /**
+     * Zapisuje książki.
+     */
     private void saveBooks(DataOutputStream out, LibraryData data) throws IOException {
         out.writeInt(data.getBooks().size());
 
@@ -173,7 +188,9 @@ public class FileStorageService {
             out.writeLong(book.getDepartment().getId());
         }
     }
-
+    /**
+     * Wczytuje książki.
+     */
     private void loadBooks(
             DataInputStream in,
             LibraryData data,
@@ -212,7 +229,9 @@ public class FileStorageService {
             booksById.put(id, book);
         }
     }
-
+    /**
+     * Zapisuje wypożyczenia.
+     */
     private void saveLoans(DataOutputStream out, LibraryData data) throws IOException {
         out.writeInt(data.getLoans().size());
 
@@ -227,7 +246,9 @@ public class FileStorageService {
             writeLocalDate(out, loan.getReturnDate());
         }
     }
-
+    /**
+     * Wczytuje wypożyczenia.
+     */
     private void loadLoans(
             DataInputStream in,
             LibraryData data,
@@ -258,7 +279,9 @@ public class FileStorageService {
             data.getLoans().add(loan);
         }
     }
-
+    /**
+     * Zapisuje datę typu LocalDate do strumienia.
+     */
     private void writeLocalDate(DataOutputStream out, LocalDate date) throws IOException {
         if (date == null) {
             out.writeBoolean(false);
@@ -267,7 +290,11 @@ public class FileStorageService {
             out.writeUTF(date.toString());
         }
     }
-
+    /**
+     * Odczytuje datę typu LocalDate ze strumienia.
+     *
+     * @return odczytana data lub null, jeśli data nie istnieje
+     */
     private LocalDate readLocalDate(DataInputStream in) throws IOException {
         boolean exists = in.readBoolean();
 

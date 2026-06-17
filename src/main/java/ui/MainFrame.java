@@ -8,9 +8,8 @@ import storage.FileStorageService;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-
 /**
- * Main application window.
+ * Główne okno aplikacji.
  */
 public class MainFrame extends JFrame {
 

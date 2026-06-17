@@ -12,7 +12,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 /**
- * Panel responsible for displaying, adding and deleting books.
+ * Panel odpowiedzialny za wyświetlanie, dodawanie i usuwanie książek.
  */
 public class BooksPanel extends JPanel {
 

@@ -10,7 +10,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 /**
- * Panel responsible for displaying, adding and deleting literature departments.
+ * Panel odpowiedzialny za wyświetlanie, dodawanie i usuwanie działów literatury.
  */
 public class DepartmentsPanel extends JPanel {
 

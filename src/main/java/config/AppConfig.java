@@ -1,22 +1,23 @@
 package config;
 
 /**
- * Stores application configuration constants.
+ * Przechowuje stałe konfiguracyjne aplikacji.
  */
 public final class AppConfig {
 
     /**
-     * Default number of worker threads used by background save operations.
+     * Domyślna liczba wątków roboczych wykorzystywanych
+     * przez operacje zapisu działające w tle.
      */
     public static final int SAVE_THREAD_POOL_SIZE = 1;
 
     /**
-     * Default application language.
+     * Domyślny język aplikacji.
      */
     public static final String DEFAULT_LANGUAGE = "pl";
 
     /**
-     * Default data file name.
+     * Domyślna nazwa pliku z danymi.
      */
     public static final String DEFAULT_DATA_FILE = "library-data.bin";
 

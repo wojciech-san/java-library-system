@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import config.AppConfig;
 
 /**
- * Manages application language and translated messages.
+ * Zarządza językiem aplikacji oraz przetłumaczonymi komunikatami.
  */
 
 public class LanguageManager {
