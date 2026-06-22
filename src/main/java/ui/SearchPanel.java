@@ -34,6 +34,8 @@ public class SearchPanel extends JPanel {
     private TitledBorder searchBorder;
     private TitledBorder resultsBorder;
 
+    private String currentResultType;
+
     public SearchPanel(LibraryService libraryService, LanguageManager languageManager) {
         this.libraryService = libraryService;
         this.languageManager = languageManager;
@@ -109,6 +111,8 @@ public class SearchPanel extends JPanel {
 
         List<Book> books = libraryService.searchBooks(phrase);
 
+        currentResultType = "books";
+
         showBooksResult(books);
     }
 
@@ -146,13 +150,13 @@ public class SearchPanel extends JPanel {
                 .stream()
                 .filter(loan -> loan.getReturnDate() == null)
                 .toList();
-
+        currentResultType = "activeLoans";
         showLoansResult(activeLoans);
     }
 
     private void showOverdueLoans() {
         List<Loan> overdueLoans = libraryService.findOverdueLoans();
-
+        currentResultType = "overdueLoans";
         showLoansResult(overdueLoans);
     }
 
@@ -188,10 +192,43 @@ public class SearchPanel extends JPanel {
         searchField.setText("");
         resultsTableModel.setRowCount(0);
         resultsTableModel.setColumnCount(0);
+        currentResultType = null;
     }
 
     public void refreshView() {
         clearResults();
+    }
+
+    private void refreshCurrentResultHeaders() {
+        if (currentResultType == null) {
+            return;
+        }
+
+        if ("books".equals(currentResultType)) {
+            resultsTableModel.setColumnIdentifiers(new String[]{
+                    languageManager.get("table.id"),
+                    languageManager.get("table.title"),
+                    languageManager.get("table.authors"),
+                    languageManager.get("table.publisher"),
+                    languageManager.get("table.year"),
+                    languageManager.get("table.isbn"),
+                    languageManager.get("table.department"),
+                    languageManager.get("table.storage")
+            });
+            return;
+        }
+
+        if ("activeLoans".equals(currentResultType) || "overdueLoans".equals(currentResultType)) {
+            resultsTableModel.setColumnIdentifiers(new String[]{
+                    languageManager.get("table.id"),
+                    languageManager.get("table.book"),
+                    languageManager.get("table.reader"),
+                    languageManager.get("table.loanDate"),
+                    languageManager.get("table.dueDate"),
+                    languageManager.get("table.returnDate"),
+                    languageManager.get("table.status")
+            });
+        }
     }
 
     public void reloadTexts() {
@@ -204,7 +241,7 @@ public class SearchPanel extends JPanel {
 
         searchBorder.setTitle(languageManager.get("border.search"));
         resultsBorder.setTitle(languageManager.get("border.results"));
-
+        refreshCurrentResultHeaders();
         revalidate();
         repaint();
     }
